@@ -26,11 +26,11 @@ df["outsideSpace"] = df["terraceSurface"] + df["gardenSurface"]
 # column per province
 df["province"] = df["postalCode"]
 df["province"] = df["province"].astype(str).replace(to_replace = r"(1[0-3]\d{2})", value = "BRU", regex = True)	
-df["province"] = df["province"].astype(str).replace(to_replace = r"(15\d{2})", value = "VLB", regex = True)	
+df["province"] = df["province"].astype(str).replace(to_replace = r"(1[5-9]\d{2})", value = "VLB", regex = True)	
 df["province"] = df["province"].astype(str).replace(to_replace = r"(3[0-4]\d{2})", value = "VLB", regex = True)
 df["province"] = df["province"].astype(str).replace(to_replace = r"(1[3-4]\d{2})", value = "WAB", regex = True)
 df["province"] = df["province"].astype(str).replace(to_replace = r"(2\d{3})", value = "ANT", regex = True)
-df["province"] = df["province"].astype(str).replace(to_replace = r"(35\d{2})", value = "LIM", regex = True)
+df["province"] = df["province"].astype(str).replace(to_replace = r"(3[5-9]\d{2})", value = "LIM", regex = True)
 df["province"] = df["province"].astype(str).replace(to_replace = r"(4\d{3})", value = "LUI", regex = True)
 df["province"] = df["province"].astype(str).replace(to_replace = r"(5\d{3})", value = "NAM", regex = True)
 df["province"] = df["province"].astype(str).replace(to_replace = r"(6[0-5]\d{2})", value = "HEN", regex = True)
@@ -38,6 +38,10 @@ df["province"] = df["province"].astype(str).replace(to_replace = r"(7\d{3})", va
 df["province"] = df["province"].astype(str).replace(to_replace = r"(6[6-9]\d{2})", value = "LUX", regex = True)
 df["province"] = df["province"].astype(str).replace(to_replace = r"(8\d{3})", value = "WVL", regex = True)
 df["province"] = df["province"].astype(str).replace(to_replace = r"(9\d{3})", value = "OVL", regex = True)
+
+# dataframe per region
+df_fla = df[((df["province"] == "VLB") | (df["province"] == "ANT") | (df["province"] == "WVL") | (df["province"] == "OVL") | (df["province"] == "LIM"))]
+df_wal = df[((df["province"] == "WAB") | (df["province"] == "LUI") | (df["province"] == "NAM") | (df["province"] == "HEN") | (df["province"] == "LUX"))]
 
 # CUT THE DATAFRAME
 # reduntant colums
@@ -51,36 +55,76 @@ housegroup_index = df[df["typeProperty"] == "HOUSE_GROUP"].index
 df = df.drop(housegroup_index, axis = 0).reset_index()
 df = df.iloc[:, 2:]
 
-df.drop_duplicates(['postalCode','price'],keep= 'last')
-
-# print(df.groupby("isFurnished"))
-# print(df.groupby("facadeCount").dropna().describe())
-# print(df.head(50))
-# print(df.tail(50))
-# print(df.info())
+df.drop_duplicates(["postalCode", "price"], keep = "last")
 
 ###############################
 
 # CREATE SEPERATE DATAFRAMES
 # per property type
 df_houses = df[df["typeProperty"] == "HOUSE"]
-df_apartments = df[df["typeProperty"] == "Apartment"]
+df_apartments = df[df["typeProperty"] == "APARTMENT"]
 
+df_fla_h = df_fla[df_fla["typeProperty"] == "HOUSE"]
+df_fla_h = df_fla[df_fla["typeProperty"] == "APARTMENT"]
 
+df_wal_h = df_wal[df_wal["typeProperty"] == "HOUSE"]
+df_wal_h = df_wal[df_wal["typeProperty"] == "APARTMENT"]
 
 ###############################
 
 # VISUALIZATION
+# with python and Matplotlib
+# mean per province
+df_houses.groupby("province").price.mean().plot(kind = "bar")
+plt.title("Mean house price per province")
+plt.xlabel("Province")
+plt.ylabel("Price")
+plt.ylim(0, 1200000)
+plt.savefig("housePerProvince")
 
-# sns.lmplot(x = "price", y = "postalCode", data = df_houses, hue = "subtypeProperty")
-# plt.xlim(0, None)
-# plt.ylim(0, 10000)
+df_apartments.groupby("province").price.mean().plot(kind = "bar")
+plt.title("Mean apartment price per province")
+plt.xlabel("Province")
+plt.ylabel("Price")
+plt.ylim(0, 1200000)
+plt.savefig("apartmentPerProvince")
+
+# mean per region
+df_fla_h.groupby("province").price.mean().plot(kind = "bar")
+plt.title("Mean house price in Flanders")
+plt.xlabel("Province")
+plt.ylabel("Price")
+plt.ylim(0, 1200000)
+plt.savefig("houseFlanders")
+
+
+df_apartments.groupby("province").price.mean().plot(kind = "bar")
+plt.title("Mean apartment price in Walonia")
+plt.xlabel("Province")
+plt.ylabel("Price")
+plt.ylim(0, 1200000)
+plt.savefig("apartmentWallonia")
+
+# mean in Belgium
+df.groupby("province").price.mean().plot(kind = "bar")
+plt.title("Mean house price in Flanders")
+plt.xlabel("Province")
+plt.ylabel("Price")
+plt.ylim(0, 1200000)
+plt.savefig("houseBelgium")
+
+df.groupby("province").price.mean().plot(kind = "bar")
+plt.title("Mean apartment price in Walonia")
+plt.xlabel("Province")
+plt.ylabel("Price")
+plt.ylim(0, 1200000)
+plt.savefig("apartmentBelgium")
+
+
+# with Seaborn
+# ppr = df_houses.groupby("province")["price"].mean()
+# ppr.reset_index()
+# print(ppr)
+# sns.barplot(x = "province", y = ppr, data = df_houses)
+# plt.ylim(0, None)
 # plt.show()
-
-# sns.boxplot(data = df_houses, x = "postalCode", y = "price", hue = "subtypeProperty")
-# plt.show()
-
-# presentation = df.groupby("province").price.mean()
-
-
-# df.loc[df.postalCode.astype(str).str.match({r"(1[0-2]\d{2})" : "VB", r"(1[5-9]\d{2})" : "VB", r"(3[0-4]\d{2})" : "VB"})], inplace = True
