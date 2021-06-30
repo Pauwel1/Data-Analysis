@@ -65,60 +65,66 @@ df_houses = df[df["typeProperty"] == "HOUSE"]
 df_apartments = df[df["typeProperty"] == "APARTMENT"]
 
 df_fla_h = df_fla[df_fla["typeProperty"] == "HOUSE"]
-df_fla_h = df_fla[df_fla["typeProperty"] == "APARTMENT"]
+df_fla_a = df_fla[df_fla["typeProperty"] == "APARTMENT"]
 
 df_wal_h = df_wal[df_wal["typeProperty"] == "HOUSE"]
-df_wal_h = df_wal[df_wal["typeProperty"] == "APARTMENT"]
+df_wal_a = df_wal[df_wal["typeProperty"] == "APARTMENT"]
 
 ###############################
 
 # VISUALIZATION
 # with python and Matplotlib
 # mean per province
-df_houses.groupby("province").price.mean().plot(kind = "bar")
-plt.title("Mean house price per province")
+# df_houses.groupby("province").price.mean().plot(kind = "bar")
+# plt.title("Mean house price per province (Belgium)")
+# plt.xlabel("Province")
+# plt.ylabel("Price")
+# plt.ylim(0, 1200000)
+# plt.savefig("housePerProvince")
+
+# df_apartments.groupby("province").price.mean().plot(kind = "bar")
+# plt.title("Mean apartment price per province (Belgium)")
+# plt.xlabel("Province")
+# plt.ylabel("Price")
+# plt.ylim(0, 1200000)
+# plt.savefig("apartmentPerProvince")
+
+# # mean per region
+# df_fla_h.groupby("province").price.mean().plot(kind = "bar")
+# plt.title("Mean house price in Flanders")
+# plt.xlabel("Province")
+# plt.ylabel("Price")
+# plt.ylim(0, 1200000)
+# plt.savefig("houseFlanders")
+
+# df_fla_a.groupby("province").price.mean().plot(kind = "bar")
+# plt.title("Mean apartment price in Flanders")
+# plt.xlabel("Province")
+# plt.ylabel("Price")
+# plt.ylim(0, 1200000)
+# plt.savefig("apartmentFlanders")
+
+df_wal_h.groupby("province").price.mean().plot(kind = "bar")
+plt.title("Mean house price in Walonia")
 plt.xlabel("Province")
 plt.ylabel("Price")
 plt.ylim(0, 1200000)
-plt.savefig("housePerProvince")
+plt.savefig("houseWallonia")
 
-df_apartments.groupby("province").price.mean().plot(kind = "bar")
-plt.title("Mean apartment price per province")
-plt.xlabel("Province")
-plt.ylabel("Price")
-plt.ylim(0, 1200000)
-plt.savefig("apartmentPerProvince")
+# df_wal_a.groupby("province").price.mean().plot(kind = "bar")
+# plt.title("Mean apartment price in Walonia")
+# plt.xlabel("Province")
+# plt.ylabel("Price")
+# plt.ylim(0, 1200000)
+# plt.savefig("apartmentWallonia")
 
-# mean per region
-df_fla_h.groupby("province").price.mean().plot(kind = "bar")
-plt.title("Mean house price in Flanders")
-plt.xlabel("Province")
-plt.ylabel("Price")
-plt.ylim(0, 1200000)
-plt.savefig("houseFlanders")
-
-
-df_apartments.groupby("province").price.mean().plot(kind = "bar")
-plt.title("Mean apartment price in Walonia")
-plt.xlabel("Province")
-plt.ylabel("Price")
-plt.ylim(0, 1200000)
-plt.savefig("apartmentWallonia")
-
-# mean in Belgium
-df.groupby("province").price.mean().plot(kind = "bar")
-plt.title("Mean house price in Flanders")
-plt.xlabel("Province")
-plt.ylabel("Price")
-plt.ylim(0, 1200000)
-plt.savefig("houseBelgium")
-
-df.groupby("province").price.mean().plot(kind = "bar")
-plt.title("Mean apartment price in Walonia")
-plt.xlabel("Province")
-plt.ylabel("Price")
-plt.ylim(0, 1200000)
-plt.savefig("apartmentBelgium")
+# # mean in Belgium
+# df.groupby("province").price.mean().plot(kind = "bar")
+# plt.title("Mean property price in Belgium")
+# plt.xlabel("Province")
+# plt.ylabel("Price")
+# plt.ylim(0, 1200000)
+# plt.savefig("meanBelgium")
 
 
 # with Seaborn
