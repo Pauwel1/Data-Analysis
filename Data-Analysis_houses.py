@@ -75,7 +75,8 @@ df_wal_a = df_wal[df_wal["typeProperty"] == "APARTMENT"]
 # VISUALIZATION
 # with python and Matplotlib
 # mean per province
-df_houses.groupby("province").price.mean().plot(kind = "bar")
+houses = df_houses.groupby("province").price.mean()
+sns.boxplot(y = df_houses["province"], data = houses)
 plt.title("Mean house price per province (Belgium)")
 plt.xlabel("Province")
 plt.ylabel("Price")
@@ -126,6 +127,19 @@ plt.ylabel("Price")
 plt.ylim(0, 1200000)
 plt.savefig("meanBelgium")
 
+# # per municipality
+# df.groupby("postalCode").price.mean().head(10).plot(kind = "bar")
+# plt.show()
+
+# df_fla.groupby("postalCode").price.mean().head(10).plot(kind = "bar")
+# plt.figure(figsize= (10, 20))
+# ax = plt.subplot()
+# ax.ticklabel_format(useOffset = False)
+# plt.title("Mean property price in Belgium")
+# plt.xlabel("Province")
+# plt.ylabel("Price")
+# plt.ylim(0, 1200000)
+# plt.show()
 
 # with Seaborn
 # ppr = df_houses.groupby("province")["price"].mean()
