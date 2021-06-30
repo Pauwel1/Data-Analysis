@@ -13,7 +13,7 @@ url = "https://raw.githubusercontent.com/jejobueno/challenge-collecting-data/mai
 df = pd.read_csv(url)
 
 
-# CLEAN THE DATAFRAME
+# GET THE DATAFRAME READY
 # sort by location & type
 df = df.sort_values(["postalCode"], ascending = False).reset_index()
 df = df.iloc[:, 2:]
@@ -22,6 +22,22 @@ df = df.iloc[:, 2:]
 df.terraceSurface.fillna(0, inplace = True)
 df.gardenSurface.fillna(0, inplace = True)
 df["outsideSpace"] = df["terraceSurface"] + df["gardenSurface"]
+
+# column per province
+df["province"] = df["postalCode"]
+df["province"] = df["province"].astype(str).replace(to_replace = r"(1[0-3]\d{2})", value = "BRU", regex = True)	
+df["province"] = df["province"].astype(str).replace(to_replace = r"(15\d{2})", value = "VLB", regex = True)	
+df["province"] = df["province"].astype(str).replace(to_replace = r"(3[0-4]\d{2})", value = "VLB", regex = True)
+df["province"] = df["province"].astype(str).replace(to_replace = r"(1[3-4]\d{2})", value = "WAB", regex = True)
+df["province"] = df["province"].astype(str).replace(to_replace = r"(2\d{3})", value = "ANT", regex = True)
+df["province"] = df["province"].astype(str).replace(to_replace = r"(35\d{2})", value = "LIM", regex = True)
+df["province"] = df["province"].astype(str).replace(to_replace = r"(4\d{3})", value = "LUI", regex = True)
+df["province"] = df["province"].astype(str).replace(to_replace = r"(5\d{3})", value = "NAM", regex = True)
+df["province"] = df["province"].astype(str).replace(to_replace = r"(6[0-5]\d{2})", value = "HEN", regex = True)
+df["province"] = df["province"].astype(str).replace(to_replace = r"(7\d{3})", value = "HEN", regex = True)
+df["province"] = df["province"].astype(str).replace(to_replace = r"(6[6-9]\d{2})", value = "LUX", regex = True)
+df["province"] = df["province"].astype(str).replace(to_replace = r"(8\d{3})", value = "WVL", regex = True)
+df["province"] = df["province"].astype(str).replace(to_replace = r"(9\d{3})", value = "OVL", regex = True)
 
 # CUT THE DATAFRAME
 # reduntant colums
@@ -46,22 +62,11 @@ df.drop_duplicates(['postalCode','price'],keep= 'last')
 ###############################
 
 # CREATE SEPERATE DATAFRAMES
-# per region
-df_zone1000 = df.loc[df.postalCode.astype(str).str.match(r"(1\d{3})")]
-df_zone2000 = df.loc[df.postalCode.astype(str).str.match(r"(2\d{3})")]
-df_zone3000 = df.loc[df.postalCode.astype(str).str.match(r"(3\d{3})")]
-df_zone4000 = df.loc[df.postalCode.astype(str).str.match(r"(4\d{3})")]
-df_zone5000 = df.loc[df.postalCode.astype(str).str.match(r"(5\d{3})")]
-df_zone6000 = df.loc[df.postalCode.astype(str).str.match(r"(6\d{3})")]
-df_zone7000 = df.loc[df.postalCode.astype(str).str.match(r"(7\d{3})")]
-df_zone8000 = df.loc[df.postalCode.astype(str).str.match(r"(8\d{3})")]
-df_zone9000 = df.loc[df.postalCode.astype(str).str.match(r"(9\d{3})")]
-
-print(df_zone1000.head(50))
-
 # per property type
 df_houses = df[df["typeProperty"] == "HOUSE"]
 df_apartments = df[df["typeProperty"] == "Apartment"]
+
+
 
 ###############################
 
@@ -74,3 +79,8 @@ df_apartments = df[df["typeProperty"] == "Apartment"]
 
 # sns.boxplot(data = df_houses, x = "postalCode", y = "price", hue = "subtypeProperty")
 # plt.show()
+
+# presentation = df.groupby("province").price.mean()
+
+
+# df.loc[df.postalCode.astype(str).str.match({r"(1[0-2]\d{2})" : "VB", r"(1[5-9]\d{2})" : "VB", r"(3[0-4]\d{2})" : "VB"})], inplace = True
